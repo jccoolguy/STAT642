@@ -1,0 +1,43 @@
+---
+title: "Homework 3"
+author: "Jack Cunningham"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+3\)
+
+6\)
+
+```{r}
+x_t_x_inv <- matrix(data = c(.02,-.02,-.02,-0.02,
+                             -.02, .04, .02, .02,
+                             -.02, .02, .04, .02,
+                             -.02, .02, .02, 0.04), nrow = 4, ncol = 4)
+l = c(1,1,0,0)
+```
+
+```{r}
+t(l)%*%x_t_x_inv%*%l
+```
