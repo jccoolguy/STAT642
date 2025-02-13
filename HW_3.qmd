@@ -26,9 +26,148 @@ You can add options to executable code like this
 
 The `echo: false` option disables the printing of code (only output is displayed).
 
+1\)
+
+Creating X matrix:
+
+```{r}
+X_1 = c(rep(1,5), rep(0,20))
+X_2 = c(rep(0,5), rep(1,5), rep(0,15))
+X_3 = c(rep(0,10), rep(1,5), rep(0,10))
+X_4 = c(rep(0,15), rep(1,5), rep(0, 5))
+X_5 = c(rep(0, 20), rep(1,5))
+X = matrix(data = c(X_1,X_2,X_3,X_4,X_5), nrow = 25, ncol = 5)
+```
+
+```{r}
+Y = c(94.09, 90.45, 99.38, 73.56, 74.39,
+      98.81, 103.55, 115.23, 129.06, 117.61,
+      197.18, 207.31, 117.5, 226.05, 222.74,
+      102.93, 117.51, 119.92, 112.01, 101.1,
+      83.14, 89.59, 87.76, 96.43, 82.94)
+```
+
+```{r}
+X_t_X_inv_1 = solve(t(X)%*% X)
+betas = X_t_X_inv_1 %*% t(X) %*% Y
+```
+
+```{r}
+mu_premolt = (94.09 + 90.45 + 99.38 + 73.56 + 74.39)/5
+mu_premolt
+```
+
+```{r}
+SS_error = 3110.18912
+MSE = SS_error/(25 - 5)
+sigma_hat_1 = sqrt(MSE)
+betas_se = sigma_hat_1 * sqrt(X_t_X_inv_1)
+se_premolt = sqrt(MSE* t(c(1,0,0,0,0)) %*% X_t_X_inv_1 %*% c(1,0,0,0,0))
+```
+
+j\)
+
+```{r}
+se_premolt = betas_se[1,1]
+lower_j = mu_premolt - qt(1 -.05/2, 25 - 5)*se_premolt
+upper_j = mu_premolt + qt(1 -.05/2, 25 - 5)*se_premolt
+c(lower_j, upper_j)
+```
+
+```{r}
+#install.packages("lsmeans")
+library(lsmeans)
+
+treatment = as.factor(c(rep("premolt",5), rep("fasting",5), rep("60g",5), 
+                        rep("80g",5), rep("laying",5)))
+data = data.frame(T = treatment, Y = Y)
+model = lm(Y ~ 0 + T, data = data)
+A = aov(model)
+summary(A)
+```
+
+g\)
+
+```{r}
+ss_total = 51679.0655
+ss_error = 3110.18912
+ss_model = ss_total - ss_error
+ss_model
+MS_model = ss_model/4
+MS_model
+MS_error = ss_error/20
+MS_error
+F = MS_model/MS_error
+F
+```
+
+l\)
+
+```{r}
+r = 6
+alpha = .05
+t = 5
+D = 30
+sigma = sqrt(150)
+
+nu1 = t - 1
+nu2 = t*(r - 1)
+L = r*D^2/(2*sigma^2)
+Phi = sqrt(L/t)
+Fcr = qf(1 - alpha, nu1, nu2)
+power = 1 - pf(Fcr, nu1, nu2, L)
+power
+```
+
+2\)
+
+```{r}
+total_2 = 26578.99151
+error_2 = 1726.89814
+model_2 = total_2 - error_2
+model_2
+MS_model = model_2/4
+MS_model
+MS_error = error_2/16
+MS_error
+F = MS_model/MS_error
+F
+```
+
+```{r}
+mu_1 = (94.09 + 90.45 + 99.38 + 73.56)/4
+mu_2 = (98.81 + 103.55 + 115.23 + 129.06 + 117.61)/5
+mu_3 = (197.18 + 207.31 + 177.5)/3
+mu_4 = (102.93 + 117.51 + 119.92 + 112.01 + 101.1)/5
+mu_5 = (83.14 + 89.59 + 87.76 + 82.94)/4
+c(mu_1, mu_2, mu_3, mu_4, mu_5)
+```
+
+e\)
+
+```{r}
+se_bran = sqrt(MS_error/5)
+se_bran
+```
+
 3\)
 
 6\)
+
+```{r}
+beta_0 = 37.5
+beta_1 = 11.5
+beta_2 = 1.0
+beta_3 = -2
+
+beta_0_se = 2.75
+beta_1_se = 3.89
+beta_2_se = 3.89
+beta_3_se = 3.89
+
+sigma_hat = 19.45
+n = 200
+```
 
 ```{r}
 x_t_x_inv <- matrix(data = c(.02,-.02,-.02,-0.02,
@@ -38,6 +177,21 @@ x_t_x_inv <- matrix(data = c(.02,-.02,-.02,-0.02,
 l = c(1,1,0,0)
 ```
 
+c\)
+
 ```{r}
-t(l)%*%x_t_x_inv%*%l
+b_mean_se = sqrt(t(l)%*%x_t_x_inv%*%l)*sigma_hat
+center = beta_0 + beta_1
+lower = center - b_mean_se*qt(1 - .05/2, df = 200 - 4)
+upper = center + b_mean_se*qt(1 - .05/2, df = 200 - 4)
+c(lower,upper)
+```
+
+d\)
+
+```{r}
+center_d = beta_1 
+lower_d = center_d - beta_1_se*qt(1 - .05/2, df = 200 - 4)
+upper_d = center_d + beta_1_se*qt(1 - .05/2, df = 200 - 4)
+c(lower_d, upper_d)
 ```
