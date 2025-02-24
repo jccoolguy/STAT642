@@ -1,0 +1,131 @@
+---
+title: "HW_4"
+format: html
+editor: visual
+---
+
+```{r}
+heat_loss = matrix(c(10.2,10.8,10.1,10.9,11.1,11.8,11.3,11.9,9.3,9.9,
+                     9.2,9.8,9.1,9.9,10.1,10.8,10.3,10.9,9.3,9.8,
+                     9.0,9.9,9.2,9.8,10,10.8,10.2,10.7,9.9,9.0,
+                     8.1,8.1,8,8.9,8.2,8.9,8.1,8.8,9.2,9.9,
+                     7.2,7.8,7.1,7.9,8.1,8.8,8.3,8.9,9.3,9.8),
+                   nrow = 5, ncol = 10, byrow = TRUE)
+```
+
+```{r}
+y_bar = apply(heat_loss, 1, mean)
+```
+
+```{r}
+p = matrix(c(4,-1,-1,-1,-1,-2,-1,0,1,2,2,-1,-2,-1,2,-1,2,0,-2,1),
+           nrow = 5, ncol = 4)
+```
+
+```{r}
+lambda = c(1,1,1,5/6)
+```
+
+```{r}
+C = colSums(p*y_bar)
+```
+
+```{r}
+D = colSums(p^2)
+```
+
+```{r}
+SSp = C^2/(1/10 *D)
+```
+
+```{r}
+alpha = C/D
+```
+
+```{r}
+SS_total = sum((heat_loss - mean(heat_loss))^2)
+SS_model = sum(SSp[-1])
+SS_error = SS_total - SS_model
+n = 50
+MSE = SS_error/(n - 3 - 1) 
+se_C = sqrt(MSE) * sqrt(D/10)
+```
+
+Scheffe's
+
+```{r}
+t = 5
+Dh = sqrt(D/10)
+Sh = Dh*se_C*sqrt((t -1)*qf(1 - .05, t - 1, n - 3 -1))
+C
+Sh
+abs(C) > Sh
+```
+
+Bonferonni
+
+```{r}
+alpha_pc = .05/4
+F_i = SSp/MSE
+F_crit = qf(1 - .05/4,1, n - 3 -1)
+F_i
+F_crit
+F_i >= F_crit
+```
+
+```{r}
+H = t(p[,-1])
+X_t_X = diag(rep(10,5))
+```
+
+```{r}
+first = t(H%*%y_bar - 0)
+second = solve(H %*% solve(X_t_X) %*% t(H))
+third = H%*%y_bar - 0
+SS_H = first %*% second %*% third
+MSE_error = (SS_total - SS_H)/(50 - 5)
+F = (SS_H/3)/MSE
+F
+```
+
+```{r}
+x = c(rep(0,10), rep(20,10), rep(40,10), rep(60,10), rep(80,10))
+model = lm(as.vector(heat_loss_vector) ~ x + I(x^2) + I(x^3))
+summary(model)
+```
+
+```{r}
+plot(x = seq(0,80, 20), y_bar)
+```
+
+Hsu's
+
+```{r}
+m = c(8.32,8.32,8.32,8.32,8.32,8.62)
+library(mvtnorm)
+m_t = 5 - 1
+d = qmvt(p = 1 - .05, tail = "lower.tail", df = 50 - 5,  
+         corr = matrix(rep(.5,m_t^2),m_t) + diag(m_t)*.5)$quantile
+crit_value = d*sqrt(MSE)*sqrt(2/10)
+k = m + crit_value
+k
+```
+
+Dunnett
+
+```{r}
+diff = y_bar[-1] - y_bar[1]
+diff
+crit_value
+diff < - crit_value
+```
+
+Tukey HSD
+
+```{r}
+q_value = qtukey(1 - .05, 5, 50 - 5)
+HSD = q_value*sqrt(MSE)*sqrt(1/10)
+abs(diff)
+HSD
+abs(diff) >= HSD
+```
