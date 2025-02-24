@@ -129,3 +129,17 @@ abs(diff)
 HSD
 abs(diff) >= HSD
 ```
+
+```{r getting SSTotal}
+y_bar_split = c(5,26,42,52,81)
+y_bar_overall = mean(y_bar_split)
+rep = 4
+SStotal = sum(4*(y_bar_split - y_bar_overall)^2)
+```
+
+```{r}
+yield = c(6,4,5,5,32,26,24,22,45,45,44,34,63,62,44,39,87,85,72,80)
+yield_bar = mean(yield)
+sstotal_yield = sum((yield-yield_bar)^2)
+sstotal_yield
+```
