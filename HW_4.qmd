@@ -1,0 +1,67 @@
+---
+title: "HW_4"
+author: "Jack Cunningham"
+format: html
+editor: visual
+---
+
+1\)
+
+```{r loading data}
+temp_40 = c(1953, 2135, 2471, 4727, 6134, 6314)
+temp_45 = c(1190, 1286, 1550, 2125, 2557, 2845)
+temp_55 = c(651,  817,  848,  1038, 1361, 1543)
+temp_70 = c(511,  651,  651,  652,  688,  729)
+y = c(temp_40, temp_45, temp_55, temp_70)
+T_40 = rep("T_40",6)
+T_45 = rep("T_45",6)
+T_55 = rep("T_55",6)
+T_70 = rep("T_70",6)
+temp = as.factor(c(T_40,T_45,T_55,T_70))
+```
+
+```{r models}
+temp_aov   = aov(y ~ temp)
+temp_model = lm(y ~ temp)
+```
+
+```{r aov summary}
+summary(temp_aov)
+```
+
+```{r diagnostic plots}
+plot(temp_model)
+```
+
+In the normal QQ plot, residuals seem symmetric.
+
+```{r residuals}
+temp_res = temp_model$residuals
+stem(temp_res)
+```
+
+Box-plot looks pretty symmetric.
+
+```{r Shapiro Wilk Test}
+shapiro.test(temp_res)
+```
+
+Our p-value is greater than 0.05, we cannot reject normality in this case.
+
+```{r residual box plots}
+plot(temp, temp_res)
+```
+
+Standard deviations are decreasing as temperature increases. In other words, standard deviations are increasing as temperature decreases.
+
+```{r BFL test}
+temp_matrix = rbind(temp_40,temp_45,temp_55,temp_70)
+median = apply(temp_matrix,1,median)
+z = abs(temp_matrix - median)
+z_vector = c(t(z))
+
+levi = aov(z_vector ~ temp)
+summary(levi)
+```
+
+F test rejects null hypothesis that variances are equal.
