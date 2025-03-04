@@ -1,0 +1,14 @@
+---
+title: "HW 5 Question 5"
+author: "Jack Cunningham"
+format: html
+editor: visual
+---
+
+```{r}
+MSE = 9
+r = 10
+t = 5
+df_error = 50 - 5
+qt(1 - 0.0005, df_error)*sqrt(MSE)*sqrt(1 - 1/10)
+```

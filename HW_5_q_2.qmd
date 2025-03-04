@@ -1,0 +1,56 @@
+---
+title: "HW 5 Question 2"
+author: "Jack Cunningham"
+format: html
+editor: visual
+---
+
+```{r loading data}
+temp_40 = c(1953, 2135, 2471, 4727, 6134, 6314)
+temp_45 = c(1190, 1286, 1550, 2125, 2557, 2845)
+temp_55 = c(651,  817,  848,  1038, 1361, 1543)
+temp_70 = c(511,  651,  651,  652,  688,  729)
+y = c(temp_40, temp_45, temp_55, temp_70)
+T_40 = rep("T_40",6)
+T_45 = rep("T_45",6)
+T_55 = rep("T_55",6)
+T_70 = rep("T_70",6)
+temp = as.factor(c(T_40,T_45,T_55,T_70))
+```
+
+```{r kruskal.test}
+kruskal.test(y, temp, y~temp)
+```
+
+```{r ranks}
+n = 24
+t = 4
+ranks = rank(y)
+rank_means = apply(rbind(ranks[1:6], ranks[7:12], ranks[13:18], ranks[19:24]), 1, mean)
+r_mean_overall = (24 + 1)/2
+r_sum_sq = n*(n + 1)*(2*n + 1)/6
+```
+
+```{r critical value}
+critical_value = qtukey(1 - 0.05, 4, 10000)*sqrt(t*(n + 1)/12)
+critical_value
+```
+
+```{r}
+rank_means
+```
+
+```{r diffs}
+print("40 vs 45")
+abs(rank_means[1] - rank_means[2]) >= critical_value
+print("40 vs 55")
+abs(rank_means[1] - rank_means[3]) >= critical_value
+print("40 vs 70")
+abs(rank_means[1] - rank_means[4]) >= critical_value
+print("45 vs 55")
+abs(rank_means[2] - rank_means[3]) >= critical_value
+print("45 vs 70")
+abs(rank_means[2] - rank_means[4]) >= critical_value
+print("55 vs 70")
+abs(rank_means[3] - rank_means[4]) >= critical_value
+```
