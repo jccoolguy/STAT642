@@ -16,6 +16,7 @@ T_45 = rep("T_45",6)
 T_55 = rep("T_55",6)
 T_70 = rep("T_70",6)
 temp = as.factor(c(T_40,T_45,T_55,T_70))
+temp_numeric = c(rep(40,6),rep(45,6),rep(55,6),rep(70,6))
 ```
 
 ```{r models}
@@ -90,14 +91,16 @@ thmax = like$x[imax]
 thmax
 ```
 
-Since theta is equal to -.64, box cox would suggest a square root transformation. But an inverse transformation is not out of range.
+Since theta is equal to -.64, box cox would suggest a 1/y transformation. But an inverse transformation is not out of range.
 
 ```{r y  transformed}
 y_trans = 1/y
 ```
 
 ```{r shapiro wilk on transformed}
-shapiro.test(y_trans)
+p_translated = shapiro.test(y_trans)
+p_translated
+p_translated$p.value
 ```
 
 We cannot reject normality with the transformed data.
@@ -139,7 +142,7 @@ Compare_trans = TukeyHSD(temp_trans_aov, "temp", ordered = FALSE, .95)
 Compare_trans
 ```
 
-T_45 and T_40 are different.
+T_45 and T_40 are not different.
 
 T_55 and T_40 are not different.
 
@@ -166,12 +169,23 @@ cubic = c(-5,9,-5,1)
 ```
 
 ```{r trend contrasts original}
+means
 C = c(sum(linear*means), sum(quadratic*means), sum(cubic*means))
 D = c(sum(linear^2), sum(quadratic^2), sum(cubic^2))
 SS = C^2/(1/6 * D)
 C
 D
 SS
+```
+
+```{r}
+lm_cubic = aov(y~temp_numeric + I(temp_numeric^2) + I(temp_numeric^3))
+summary(lm_cubic)
+```
+
+```{r}
+lm_cubic_transformed = aov(y_trans~temp_numeric + I(temp_numeric^2) + I(temp_numeric^3))
+summary(lm_cubic_transformed)
 ```
 
 ```{r sum_of_squares original}
