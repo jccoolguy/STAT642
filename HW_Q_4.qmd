@@ -22,21 +22,28 @@ MS_AC = 6.8
 MS_E  = 5.8
 ```
 
+```{r F test A True}
+F = MS_A/MS_AB
+p_value = 1 - pf(F, df_A, df_AB)
+c(F,p_value)
+```
+
 $$
-F = \frac{MS_A}{M},M=MS_{AB}+MS_{AC}-MS_E,df_M=\frac{M^2}{\frac{MS_{AB}^2}{df_{AB}}+\frac{MS_{AC}^2}{df_{AC}}+\frac{MS_E^2}{df_E}}
+F = \frac{MS_B}{M},M=MS_{AB}+MS_{C}-MS_{AC},df_M=\frac{M^2}{\frac{MS_{AB}^2}{df_{AB}}+\frac{MS_{C}^2}{df_{C}}+\frac{MS_{AC}^2}{df_{AC}}}
 $$
 
-```{r F test A}
-M = MS_AB + MS_AC - MS_E
-df_M = (M^2)/((MS_AB^2/df_AB) + (MS_AC^2)/df_AC + (MS_E^2)/df_E)
+```{r F test B}
+M = MS_AB + MS_C - MS_AC
+df_M = (M^2)/((MS_AB^2/df_AB) + (MS_C^2)/df_C + (MS_AC^2)/df_AC)
+df_M
 F = MS_A/M
 p_value = 1 - pf(F, df_A, df_M)
 c(F,p_value)
 ```
 
 ```{r F test AB}
-F = MS_AB/MS_E
-p_value = 1 - pf(F, df_AB, df_E)
+F = MS_AB/MS_AC
+p_value = 1 - pf(F, df_AB, df_AC)
 c(F,p_value)
 ```
 
