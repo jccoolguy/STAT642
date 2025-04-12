@@ -1,0 +1,21 @@
+---
+title: "HW 8 Q 3"
+author: "Jack Cunningham"
+format: html
+editor: visual
+---
+
+```{r}
+var_I_S   = 156.1
+var_T_I_S = 13.9775
+var_M_I_S = 13.93183
+var_e     = 4.1683
+var_y     = var_I_S + var_T_I_S + var_M_I_S + var_e
+```
+
+```{r}
+var_I_S/var_y
+var_T_I_S/var_y
+var_M_I_S/var_y
+var_e/var_y
+```
