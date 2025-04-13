@@ -36,9 +36,11 @@ $$
 M = MS_AB + MS_C - MS_AC
 df_M = (M^2)/((MS_AB^2/df_AB) + (MS_C^2)/df_C + (MS_AC^2)/df_AC)
 df_M
-F = MS_A/M
-p_value = 1 - pf(F, df_A, df_M)
+F = MS_B/M
+p_value = 1 - pf(F, df_B, df_M)
 c(F,p_value)
+
+var_diff = 1/36*M
 ```
 
 ```{r F test AB}
@@ -57,10 +59,4 @@ c(F, p_value)
 F = MS_AC/MS_E
 p_value = 1 - pf(F, df_AC, df_E)
 c(F,p_value)
-```
-
-```{r F test B}
-F = MS_B/MS_AB
-p_value = 1 - pf(F, df_B, df_AB)
-c(F, p_value)
 ```
